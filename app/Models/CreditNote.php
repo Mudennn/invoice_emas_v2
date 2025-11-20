@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use App\Models\CreditNoteItem;
 
 class CreditNote extends Model
@@ -42,5 +43,11 @@ class CreditNote extends Model
     public function creditItems()
     {
         return $this->hasMany(CreditNoteItem::class);
+    }
+
+    // Relationship with Einvoices (polymorphic)
+    public function einvoices(): MorphMany
+    {
+        return $this->morphMany(Einvoice::class, 'documentable');
     }
 } 

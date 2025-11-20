@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use App\Models\DebitNoteItem;
 
 class DebitNote extends Model
@@ -42,5 +43,11 @@ class DebitNote extends Model
     public function debitItems()
     {
         return $this->hasMany(DebitNoteItem::class);
+    }
+
+    // Relationship with Einvoices (polymorphic)
+    public function einvoices(): MorphMany
+    {
+        return $this->morphMany(Einvoice::class, 'documentable');
     }
 } 
