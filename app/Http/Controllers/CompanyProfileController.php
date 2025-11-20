@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CompanyProfileFormRequest;
 use App\Models\CompanyProfile;
 use App\Models\Selection;
+use App\Models\Msic;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
@@ -32,20 +33,22 @@ class CompanyProfileController extends Controller
     {
         $company_profile = CompanyProfile::findOrFail($id);
     	$states = Selection::select('id', 'selection_data')->where('selection_type', 'state')->where('status', '0')->get();
-         
-        $ro = 'readonly'; 
-        
-        return view('company_profiles.view', compact('company_profil', 'states',  'ro'));
+        $msics = Msic::select('id', 'msic_code', 'description')->where('status', '0')->orderBy('msic_code')->get();
+
+        $ro = 'readonly';
+
+        return view('company_profiles.view', compact('company_profile', 'states', 'msics', 'ro'));
     }
     
     public function create()
-    {        
+    {
         $company_profile = new CompanyProfile();
     	$states = Selection::select('id', 'selection_data')->where('selection_type', 'state')->where('status', '0')->get();
-         
-        $ro = ''; 
-        
-        return view('company_profiles.create', compact('company_profile', 'states', 'ro'));
+        $msics = Msic::select('id', 'msic_code', 'description')->where('status', '0')->orderBy('msic_code')->get();
+
+        $ro = '';
+
+        return view('company_profiles.create', compact('company_profile', 'states', 'msics', 'ro'));
     }
     
     public function store(CompanyProfileFormRequest $request)
@@ -84,10 +87,11 @@ class CompanyProfileController extends Controller
     {
         $company_profile = CompanyProfile::findOrFail($id);
     	$states = Selection::select('id', 'selection_data')->where('selection_type', 'state')->where('status', '0')->get();
-         
-        $ro = ''; 
-        
-        return view('company_profiles.edit', compact('company_profile', 'states', 'ro'));
+        $msics = Msic::select('id', 'msic_code', 'description')->where('status', '0')->orderBy('msic_code')->get();
+
+        $ro = '';
+
+        return view('company_profiles.edit', compact('company_profile', 'states', 'msics', 'ro'));
     }
     
     public function update(CompanyProfileFormRequest $request, $id)
@@ -129,10 +133,11 @@ class CompanyProfileController extends Controller
     {
         $company_profile = CompanyProfile::findOrFail($id);
     	$states = Selection::select('id', 'selection_data')->where('selection_type', 'state')->where('status', '0')->get();
-         
-        $ro = ''; 
-              
-        return view('company_profiles.show', compact('company_profile', 'states', 'ro'));
+        $msics = Msic::select('id', 'msic_code', 'description')->where('status', '0')->orderBy('msic_code')->get();
+
+        $ro = '';
+
+        return view('company_profiles.show', compact('company_profile', 'states', 'msics', 'ro'));
     }
      
     public function destroy($id)

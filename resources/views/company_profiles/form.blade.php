@@ -153,8 +153,20 @@
 
 <div class="input-form">
     <label class="form-label">MSIC Code <span class="text-danger">*</span></label>
-    <input type="text" name="msic_code" value="{{ old('msic_code') ?? $company_profile->msic_code }}" class="form-control"
-        {{ $ro }}>
+    <select name="msic_code" id="msic_code" class="form-control form-select" {{ $ro }}>
+        <option value="">Choose MSIC Code:</option>
+        @foreach ($msics as $msic)
+            @if ($company_profile->msic_code)
+                <option value="{{ $msic->msic_code }}" {{ $msic->msic_code == $company_profile->msic_code ? 'selected' : '' }}>
+                    {{ $msic->msic_code }} - {{ $msic->description }}
+                </option>
+            @else
+                <option value="{{ $msic->msic_code }}" {{ $msic->msic_code == old('msic_code') ? 'selected' : '' }}>
+                    {{ $msic->msic_code }} - {{ $msic->description }}
+                </option>
+            @endif
+        @endforeach
+    </select>
 
     @error('msic_code')
         <span class="text-danger font-weight-bold small"># {{ $message }}</span>

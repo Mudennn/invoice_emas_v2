@@ -22,6 +22,7 @@ use App\Http\Controllers\RefundNoteController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\SelfBilledInvoiceController;
 use App\Http\Controllers\IsController;
+use App\Http\Controllers\MsicController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -264,4 +265,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('is/{id}', [IsController::class, 'destroy'])->name('is.destroy');
     Route::get('is/{id}/view', [IsController::class, 'view'])->name('is.view');
     Route::post('search', [IsController::class, 'search'])->name('is.search');
+
+      // MSIC Routes
+    Route::get('msics', [MsicController::class, 'index'])->name('msics.index');
+    Route::get('msics/create', [MsicController::class, 'create'])->name('msics.create');
+    Route::post('msics', [MsicController::class, 'store'])->name('msics.store');
+    Route::get('msics/{id}/edit', [MsicController::class, 'edit'])->name('msics.edit');
+    Route::patch('msics/{id}', [MsicController::class, 'update'])->name('msics.update');
+    Route::get('msics/{id}', [MsicController::class, 'show'])->name('msics.show');
+    Route::delete('msics/{id}', [MsicController::class, 'destroy'])->name('msics.destroy');
+    Route::get('msics/{id}/view', [MsicController::class, 'view'])->name('msics.view');
+  
 });

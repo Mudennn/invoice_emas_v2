@@ -123,6 +123,14 @@ return [
             'handler' => NullHandler::class,
         ],
 
+        'myinvois' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/myinvois.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 30,
+            'replace_placeholders' => true,
+        ],
+
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
