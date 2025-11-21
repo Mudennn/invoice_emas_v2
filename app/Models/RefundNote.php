@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use App\Models\RefundNoteItem;
 
 class RefundNote extends Model
 {
@@ -24,12 +23,12 @@ class RefundNote extends Model
         'reason',
         'einvoice_version',
         'original_invoice_uuid',
-        'type_code', 
-        'signed_info', 
-        'signature_value', 
-        'x509_certificate', 
-        'issuer_name', 
-        'serial_number', 
+        'type_code',
+        'signed_info',
+        'signature_value',
+        'x509_certificate',
+        'issuer_name',
+        'serial_number',
         'status',
         'created_by',
         'updated_by',
@@ -50,4 +49,49 @@ class RefundNote extends Model
     {
         return $this->morphMany(Einvoice::class, 'documentable');
     }
-} 
+
+    /**
+     * Get the latest einvoice record for this refund note.
+     */
+    public function getLatestEinvoice(): ?Einvoice
+    {
+        return $this->einvoices()->latest()->first();
+    }
+
+    /**
+     * Get the current e-invoice status.
+     */
+    public function getEinvoiceStatus(): string
+    {
+        $latestEinvoice = $this->getLatestEinvoice();
+
+        return $latestEinvoice ? $latestEinvoice->status : 'not_submitted';
+    }
+
+    /**
+     * Check if refund note has a valid einvoice.
+     */
+    public function hasValidEinvoice(): bool
+    {
+        return $this->einvoices()->where('status', 'valid')->exists();
+    }
+
+    /**
+     * Check if refund note can be submitted to MyInvois.
+     */
+    public function canSubmitToMyInvois(): bool
+    {
+        // Cannot submit if already has valid einvoice
+        if ($this->hasValidEinvoice()) {
+            return false;
+        }
+
+        // Cannot submit if currently being processed
+        $latestEinvoice = $this->getLatestEinvoice();
+        if ($latestEinvoice && in_array($latestEinvoice->status, ['submitted', 'processing'])) {
+            return false;
+        }
+
+        return true;
+    }
+}
